@@ -1,0 +1,9 @@
+grammar Command;
+
+command: schedule | cancel ;          // Quy tắc gốc: các loại lệnh
+schedule: 'đặt' 'lịch' 'hẹn' 'vào' day 'lúc' time ;  // Lệnh đặt lịch
+cancel: 'hủy' 'lịch' 'hẹn' 'vào' day ;              // Lệnh hủy lịch
+day: 'thứ Hai' | 'thứ Ba' | 'thứ Tư' | 'thứ Năm' | 'thứ Sáu' | 'thứ Bảy' | 'Chủ Nhật' ;
+time: NUMBER 'giờ' ('sáng' | 'chiều')? ;            // Giờ (ví dụ: 10 giờ sáng)
+NUMBER: [0-9]+ ;                                    // Số nguyên
+WS: [ \t\r\n]+ -> skip ;                            // Bỏ qua khoảng trắng
