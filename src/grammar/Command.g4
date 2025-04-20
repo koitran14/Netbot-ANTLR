@@ -8,8 +8,8 @@ greeting: GREETING;
 order: 'Add your grammar';
 
 // TOP-UP GRAMMAR
-topup: TOPUP_PREFIX AMOUNT (CURRENCY)? (POLITE)?;
-
+topup: TOPUP_PREFIX AMOUNT (CURRENCY)? (account_spec)? (POLITE)?;
+account_spec: 'to' ('my' 'account' | 'account' ACCOUNT_NAME);
 
 // LEXER RULES
 GREETING: 'hello' | 'hi' | 'hey' | 'good morning' | 'good afternoon';
@@ -19,6 +19,7 @@ TOPUP_PREFIX: 'top up' | 'add money' | 'recharge' | 'fund my account' | 'add to 
 AMOUNT: [0-9]+ ('.' [0-9]+)?;
 CURRENCY: 'dollars' | 'usd' | 'vnd';
 POLITE: 'please' | 'thanks' | 'thank you';
+ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
 
 WS: [ \t\r\n]+ -> skip ;                            // Bỏ qua khoảng trắng
 PUNCTUATION: [.,?!]+ -> skip;                       // Tạm thời bỏ qua dấu câu
