@@ -1,19 +1,24 @@
 grammar Command;
 
-command: xinchao (goimon | naptien) | xinchao ;          // Quy tắc gốc: các loại lệnh
-xinchao: command;
-goimon: food | drink;
+command: greeting* (order | topup)?;
 
-// food
-goimon: 'đặt' 'lịch' 'hẹn' 'vào' ('ngày')? day 'lúc' time ;  // Lệnh đặt lịch
-cancel: 'hủy' 'lịch' 'hẹn' 'vào' day ;              // Lệnh hủy lịch
-day: 'thứ Hai' | 'thứ Ba' | 'thứ Tư' | 'thứ Năm' | 'thứ Sáu' | 'thứ Bảy' | 'Chủ Nhật' ;
-time: NUMBER ('giờ' | 'h') ('sáng' | 'chiều')? ;            // Giờ (ví dụ: 10 giờ sáng)
-NUMBER: [0-9]+ ;                                    // Số nguyên
+greeting: GREETING;
 
-//drink
+// ORDER
+order: 'Add your grammar';
 
-//naptien
+// TOP-UP ACCOUNT
+topup: TOPUP_PREFIX AMOUNT (CURRENCY)? (POLITE)?;
 
+
+// LEXER RULES
+GREETING: 'hello' | 'hi' | 'hey' | 'good morning' | 'good afternoon';
+TOPUP_PREFIX: 'top up' | 'add money' | 'recharge' | 'fund my account' | 'add to my account' 
+              | 'could you add' | 'please top off' | 'i need to put' | 'put some money' | 'load up' 
+              | 'can you top up' | 'i want to add' | 'please add' | 'top off my account';
+AMOUNT: [0-9]+ ('.' [0-9]+)?;
+CURRENCY: 'dollars' | 'usd' | 'vnd';
+POLITE: 'please' | 'thanks' | 'thank you';
 
 WS: [ \t\r\n]+ -> skip ;                            // Bỏ qua khoảng trắng
+PUNCTUATION: [.,?!]+ -> skip;                       // Tạm thời bỏ qua dấu câu

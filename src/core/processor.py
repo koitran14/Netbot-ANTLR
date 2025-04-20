@@ -5,11 +5,19 @@ from src.generated.CommandVisitor import CommandVisitor
 from src.generated.CommandParser import CommandParser
 
 class CommandProcessor(CommandVisitor):
-    def visitSchedule(self, ctx: CommandParser.ScheduleContext):
-        day = ctx.day().getText()
-        time = ctx.time().getText()
-        return {"intent": "schedule", "day": day, "time": time}
+    def visitGreeting(self, ctx: CommandParser.GreetingContext):
+        greeting = ctx.GREETING().getText()
+        return {"intent": "greeting", "greeting": greeting }
 
-    def visitCancel(self, ctx: CommandParser.CancelContext):
-        day = ctx.day().getText()
-        return {"intent": "cancel", "day": day}
+    def visitTopup(self, ctx: CommandParser.TopupContext):
+        topup_prefix = ctx.TOPUP_PREFIX().getText()
+        amount = ctx.AMOUNT().getText()
+        currency = ctx.CURRENCY().getText() if ctx.CURRENCY() else None  # Optional, check for None
+        polite = ctx.POLITE().getText() if ctx.POLITE() else None  # Optional, check for None
+        return {
+            "intent": "Topup",
+            "topup_prefix": topup_prefix,
+            "amount": amount,
+            "currency": currency,
+            "polite": polite
+        }
