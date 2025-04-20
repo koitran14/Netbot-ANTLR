@@ -4,10 +4,10 @@ command: greeting* (order | topup)?;
 
 greeting: GREETING;
 
-// ORDER
+// ORDER GRAMMAR
 order: 'Add your grammar';
 
-// TOP-UP ACCOUNT
+// TOP-UP GRAMMAR
 topup: TOPUP_PREFIX AMOUNT (CURRENCY)? (POLITE)?;
 
 
