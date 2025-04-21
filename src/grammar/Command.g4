@@ -9,7 +9,7 @@ command: greeting* (order | topup)? EOF;
 greeting: GREETING;
 
 // ==== ORDER RULE ====
-order: ORDER_PREFIX? AMOUNT ITEM (POLITE)?;
+order: ORDER_PREFIX? ORDER_AMOUNT ITEM (POLITE)?;
 
 // ==== TOP-UP RULE ====
 topup: TOPUP_PREFIX AMOUNT (CURRENCY)? (POLITE)?;
@@ -26,8 +26,8 @@ ORDER_PREFIX:
       'order' | 'i want' | 'give me' | 'can i have' | 'please get me' | 'i’d like';
 
 ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
-
-AMOUNT: [0-9]+ ('.' [0-9]+)?; // 12 hoặc 12.5
+ORDER_AMOUNT: [0-9]+;
+AMOUNT: [0-9]+ ('.' [0tb-9]+)?; // 12 hoặc 12.5
 
 CURRENCY: 'dollars' | 'usd' | 'vnd';
 
