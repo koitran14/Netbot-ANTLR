@@ -37,6 +37,10 @@ java -version
 ```
 5. **Tạo mã nguồn từ file ngữ pháp**
 ```bash
+python run.py gen
+```
+hoặc
+```bash
 ./scripts/generate_parser.sh
 ```
 - Trên Windows:
@@ -116,7 +120,19 @@ project_name/
 
 ## Cách Chạy
 1. **Thiết lập môi trường**: Làm theo phần "Cách Clone và Thiết Lập Môi Trường"
-2. **Chạy giao diện CLI**
+2. Dịch script:
+```bash
+python run.py gen
+```
+hoặc
+```bash
+python -m src.interfaces.cli
+```
+3. **Chạy giao diện GUI**
+```bash
+python run.py cli
+```
+hoặc
 ```bash
 python -m src.interfaces.cli
 ```
@@ -125,8 +141,21 @@ python -m src.interfaces.cli
 set PYTHONPATH=%PYTHONPATH%;%CD%
 python src/interfaces/cli.py
 ```
-3. **Tương tác**: Nhập các lệnh theo ngữ pháp (ví dụ: `đặt lịch hẹn vào thứ Hai lúc 10 giờ sáng`).
-4. **Chạy kiểm tra**:
+4. **Chạy giao diện CLI**
+```bash
+python run.py cli
+```
+hoặc
+```bash
+python -m src.interfaces.cli
+```
+- Trên Windows (nếu lỗi):
+```bash
+set PYTHONPATH=%PYTHONPATH%;%CD%
+python src/interfaces/cli.py
+```
+5. **Tương tác**: Nhập các lệnh theo ngữ pháp (ví dụ: I want to add 8 dollars.`).
+6. **Chạy kiểm tra**:
 ```bash
 pytest src/tests/
 ```

@@ -7,7 +7,7 @@ from src.generated.CommandParser import CommandParser
 class CommandProcessor(CommandVisitor):
     def visitGreeting(self, ctx: CommandParser.GreetingContext):
         greeting = ctx.GREETING().getText()
-        return {"intent": "greeting", "greeting": greeting }
+        return f"Hi, what do you want? You said: {greeting}"
 
     def visitTopup(self, ctx: CommandParser.TopupContext):
         if not ctx.TOPUP_PREFIX():
