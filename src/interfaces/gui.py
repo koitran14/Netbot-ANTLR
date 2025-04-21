@@ -122,23 +122,7 @@ class ChatbotApp(ctk.CTk):
             print(f"Parsed tree: {tree.toStringTree() if tree else 'None'}")
             # Process the parsed tree
             processor = CommandProcessor()
-            result = processor.visit(tree)
-            print(f"Processing result: {result}")
-            
-            if result["intent"] == "greeting":
-                return f"You said {result['greeting']}!"
-            
-            elif result["intent"] == "order":
-                return f"You want to order {result['order']}!"
-            
-            elif result["intent"] == "topup":
-                polite = f" ({result['polite']}))" if result['polite'] else ""
-                currency = result['currency'] if result['currency'] else ""
-                account = f" for account {result['account']}" if result['account'] != "my account" else ""
-                return f"You want to top up {result['amount']} {currency}{account}{polite}!"
-            
-            else:
-                return "I'm not sure how to respond to that. Can you try asking something else?"
+            return processor.visit(tree)
         
         except Exception as e:
             # Handle parsing or processing errors
