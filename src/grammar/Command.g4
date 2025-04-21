@@ -1,9 +1,38 @@
 grammar Command;
 
-command: schedule | cancel ;          // Quy tắc gốc: các loại lệnh
-schedule: 'đặt' 'lịch' 'hẹn' 'vào' ('ngày')? day 'lúc' time ;  // Lệnh đặt lịch
-cancel: 'hủy' 'lịch' 'hẹn' 'vào' day ;              // Lệnh hủy lịch
-day: 'thứ Hai' | 'thứ Ba' | 'thứ Tư' | 'thứ Năm' | 'thứ Sáu' | 'thứ Bảy' | 'Chủ Nhật' ;
-time: NUMBER ('giờ' | 'h') ('sáng' | 'chiều')? ;            // Giờ (ví dụ: 10 giờ sáng)
-NUMBER: [0-9]+ ;                                    // Số nguyên
-WS: [ \t\r\n]+ -> skip ;                            // Bỏ qua khoảng trắng
+options { caseInsensitive = true; }
+
+// ==== ENTRY RULE ====
+command: greeting* (order | topup)? EOF;
+
+// ==== GREETING ====
+greeting: GREETING;
+
+// ==== ORDER RULE ====
+order: ORDER_PREFIX? AMOUNT ITEM (POLITE)?;
+
+// ==== TOP-UP RULE ====
+topup: TOPUP_PREFIX AMOUNT (CURRENCY)? (POLITE)?;
+
+// ==== TERMINALS ====
+GREETING: 'hello' | 'hi' | 'hey' | 'good morning' | 'good afternoon';
+
+TOPUP_PREFIX:
+      'top up' | 'add money' | 'recharge' | 'fund my account' | 'add to my account' 
+    | 'could you add' | 'please top off' | 'i need to put' | 'put some money' | 'load up' 
+    | 'can you top up' | 'i want to add' | 'please add' | 'top off my account';
+
+ORDER_PREFIX:
+      'order' | 'i want' | 'give me' | 'can i have' | 'please get me' | 'i’d like';
+
+ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
+
+AMOUNT: [0-9]+ ('.' [0-9]+)?; // 12 hoặc 12.5
+
+CURRENCY: 'dollars' | 'usd' | 'vnd';
+
+POLITE: 'please' | 'thanks' | 'thank you';
+
+// ==== SKIP ====
+WS: [ \t\r\n]+ -> skip;                            
+PUNCTUATION: [.,?!]+ -> skip;                      
