@@ -166,13 +166,14 @@ class ChatbotApp(ctk.CTk):
             processor = CommandProcessor()
             response = processor.visit(tree)
             
-            order_details = processor.visitOrder()
-            is_order = bool(order_details)
+            print(f"Response: {response}")
+            
+            is_order = response["intent"] == 'ORDER'
             
             if is_order:
                 self.order_in_progress = True
 
-            return response, is_order
+            return response["message"], is_order
 
         except Exception as e:
             # Handle parsing or processing errors
