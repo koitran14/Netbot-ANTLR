@@ -1,31 +1,29 @@
 grammar Command;
 
-// ==== ENTRY RULE ====
+// Parser rules
 command: greeting* (order | topup)?;
-
-// ==== GREETING ====
 greeting: GREETING;
-
-// ==== ORDER RULE ====
-order: (ORDER_PREFIX)? ORDER_AMOUNT ITEM (POLITENESS)?;
-
-// ==== TOP-UP RULE ====
-topup: TOPUP_PREFIX AMOUNT CURRENCY (account_spec)? (POLITENESS)?;
+order: ORDER_PREFIX? NUMBER ITEM (POLITE)?;
+topup: TOPUP_PREFIX NUMBER (CURRENCY)? (account_spec)? (POLITE)?;
 account_spec: 'to' ('my' 'account' | 'account' ACCOUNT_NAME);
 
-// ==== TERMINALS ====
+// Lexer rules
+// Specific tokens first to avoid conflicts with general tokens
 GREETING: 'hello' | 'hi' | 'hey' | 'good morning' | 'good afternoon';
+ORDER_PREFIX: 'order' | 'i want' | 'give me' | 'can i have' | 'please get me' | 'i’d like';
 TOPUP_PREFIX: 'top up' | 'add money' | 'recharge' | 'fund my account' | 'add to my account' 
               | 'could you add' | 'please top off' | 'i need to put' | 'put some money' | 'load up' 
               | 'can you top up' | 'i want to add' | 'please add' | 'top off my account';
-AMOUNT: [0-9]+ ('.' [0-9]+)?;
-CURRENCY: 'dollars' | 'usd' | 'vnd';
-ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
-ORDER_PREFIX: 'order' | 'i want' | 'give me' | 'can i have' | 'please get me' | 'i’d like';
-ORDER_AMOUNT: [0-9]+;
 ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
-POLITENESS: 'thanks' | 'thank you' | 'please';
+POLITE: 'please' | 'thanks' | 'thank you';
+CURRENCY: 'dollars' | 'usd' | 'vnd';
 
-// ==== SKIP ====
-WS: [ \t\r\n]+ -> skip ;                            // Bỏ qua khoảng trắng
-PUNCTUATION: [.,?!]+ -> skip;                       // Tạm thời bỏ qua dấu câu
+// General tokens
+ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
+
+// Unified number token for both integer and decimal amounts
+NUMBER: [0-9]+ ('.' [0-9]+)?;
+
+// Skip rules
+WS: [ \t\r\n]+ -> skip;
+PUNCTUATION: [.,?!]+ -> skip;

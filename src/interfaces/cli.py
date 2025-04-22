@@ -6,6 +6,7 @@ def main():
     print("Chatbot for Order and Topup. Type 'quit' to exit.")
     while True:
         user_input = input ("You: ")
+        print(f"User input: {user_input.lower()}");
         if user_input.lower() == "quit":
             print("quit!")
             break
