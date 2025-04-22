@@ -1,7 +1,4 @@
 grammar Command;
-
-options { caseInsensitive = true; }
-
 // ==== ENTRY RULE ====
 command: greeting* (order | topup)? EOF;
 
@@ -26,8 +23,9 @@ ORDER_PREFIX:
       'order' | 'i want' | 'give me' | 'can i have' | 'please get me' | 'i’d like';
 
 ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
+
 ORDER_AMOUNT: [0-9]+;
-AMOUNT: [0-9]+ ('.' [0tb-9]+)?; // 12 hoặc 12.5
+AMOUNT: [0-9]+ ('.' [0-9]+)?;
 
 CURRENCY: 'dollars' | 'usd' | 'vnd';
 

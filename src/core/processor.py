@@ -32,7 +32,7 @@ class CommandProcessor(CommandVisitor):
         }
 
     def visitOrder(self, ctx: CommandParser.OrderContext):
-        if ctx.AMOUNT() is None:
+        if ctx.ORDER_AMOUNT() is None:
             return {"intent": "order", "error": "Missing amount"}
         if ctx.ITEM() is None:
             return {"intent": "order", "error": "Missing item"}
@@ -40,7 +40,7 @@ class CommandProcessor(CommandVisitor):
         return {
             "intent": "order",
             "order_prefix": self._get_optional_text(ctx.ORDER_PREFIX()),
-            "amount": ctx.ORDER.AMOUNT().getText(),
+            "amount": ctx.ORDER_AMOUNT().getText(),
             "item": ctx.ITEM().getText(),
             "polite": self._get_optional_text(ctx.POLITE())
         }
