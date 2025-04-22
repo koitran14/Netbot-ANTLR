@@ -1,6 +1,4 @@
-import sys
-import os
-from antlr4 import * 
+from antlr4 import *
 from src.generated.CommandVisitor import CommandVisitor
 from src.generated.CommandParser import CommandParser
 
