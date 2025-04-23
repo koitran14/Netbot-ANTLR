@@ -219,9 +219,12 @@ class ChatbotApp(ctk.CTk):
         
         # Format order details for chat
         formatted_items = [
-            f"{item} x{quantity}" for item, quantity in order_details["item_quantities"].items()
+            f"\n- {quantity} {item}" for item, quantity in order_details["item_quantities"].items()
         ]
-        items_text = ", ".join(formatted_items)
+        items_text = ". ".join(formatted_items)
+        query = 'order ' + items_text
+        
+        self.get_bot_response(query) # submit query to call the processor under leaves.
 
         # Format total
         total_text = f"${order_details['total']:.2f}"
@@ -230,10 +233,14 @@ class ChatbotApp(ctk.CTk):
         confirmation = (
             f"Thank you for your order!\n\n"
             f"Items: {items_text}\n"
+            "--------------------\n"
             f"Total: {total_text}\n\n"
             f"Your order will be ready soon!"
         )
         self.add_bot_message(confirmation)
+        
+        # create a query to add the order processor and save it to the database
+        
         
         # Scroll to the bottom to show the latest messages
         self.chat_frame._parent_canvas.yview_moveto(1.0)

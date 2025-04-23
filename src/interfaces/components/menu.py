@@ -232,6 +232,7 @@ class MenuPopup(ctk.CTkToplevel):
                 if quantity > 0:
                     selected_items.append((item, quantity))
                     total += item['price'] * quantity
+                    
         
         # Collect all drink items with quantity > 0
         for category, items in MENU["drink"].items():

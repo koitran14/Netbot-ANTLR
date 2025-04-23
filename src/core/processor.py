@@ -34,9 +34,9 @@ class CommandProcessor(CommandVisitor):
     
     def visitOrder(self, ctx: CommandParser.OrderContext):
         if not ctx.INTEGER():
-            return {"intent": "ORDER", "message": "Missing amount"}
+            return {"intent": "ORDER", "message": "Yeah sure, please select directly from the menu!"}
         if not ctx.ITEM():
-            return {"intent": "ORDER", "message": "Missing item"}
+            return {"intent": "ORDER", "message": "Hmm, maybe you'd like to order something from the menu? Please check!"}
 
         amount = ctx.INTEGER().getText()
         
