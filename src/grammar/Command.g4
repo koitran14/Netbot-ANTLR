@@ -17,8 +17,13 @@ TOPUP_PREFIX: 'top up' | 'add money' | 'recharge' | 'fund my account' | 'add to 
 ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
 POLITE: 'please' | 'thanks' | 'thank you';
 CURRENCY: 'dollars' | 'usd';
+
 ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
+
+// Unified number token for both integer and decimal amounts
 INTEGER: [0-9]+;
 FLOAT: [0-9]+ '.' [0-9]+;
+
+// Skip rules
 WS: [ \t\r\n]+ -> skip;
 PUNCTUATION: [.,?!]+ -> skip;
