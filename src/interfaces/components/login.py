@@ -1,10 +1,5 @@
 import customtkinter as ctk
-
-USERS = {
-    "user1": "password1",
-    "user2": "password2",
-    "demo": "demo"
-}
+from src.database.models.user import UserModel
 
 class LoginFrame(ctk.CTkFrame):
     def __init__(self, master, on_login_success):
@@ -40,9 +35,12 @@ class LoginFrame(ctk.CTkFrame):
     def login(self, event=None):
         username = self.username_entry.get()
         password = self.password_entry.get()
+        user_model = UserModel()
         
-        if username in USERS and USERS[username] == password:
-            self.on_login_success(username)
+        verify = user_model.auth_login(username, password)
+        
+        if verify is not None:
+            self.on_login_success(verify)
         else:
             self.status_label.configure(text="Invalid username or password")
             self.password_entry.delete(0, "end")

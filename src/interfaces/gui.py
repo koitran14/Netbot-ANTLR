@@ -4,6 +4,7 @@ from datetime import datetime
 
 from src.core.parser import parse_command
 from src.core.processor import CommandProcessor
+from src.hooks import clear_current_user, set_current_user
 from src.interfaces.components.login import LoginFrame
 from src.interfaces.components.menu import MenuPopup
 
@@ -38,8 +39,16 @@ class ChatbotApp(ctk.CTk):
         self.login_frame = LoginFrame(self, self.on_login_success)
         self.login_frame.grid(row=0, column=0, sticky="nsew")
     
-    def on_login_success(self, username):
-        self.current_user = username
+    def on_login_success(self, user): 
+        """
+            "id": result[0],
+            "username": result[1],
+            "password": result[2],  # You can omit this if you don't want to return it
+            "amount": result[3],
+            "orders": result[4]
+        """       
+        self.current_user = user
+        set_current_user(user)
         
         # Remove login frame
         self.login_frame.grid_forget()
@@ -57,7 +66,7 @@ class ChatbotApp(ctk.CTk):
         self.user_frame.grid(row=0, column=0, padx=10, pady=(10, 5), sticky="new")
         self.user_frame.grid_columnconfigure(1, weight=1)
         
-        self.user_label = ctk.CTkLabel(self.user_frame, text=f"Logged in as: {self.current_user}", 
+        self.user_label = ctk.CTkLabel(self.user_frame, text=f"Logged in as: {self.current_user["username"]}", 
                                       font=("Arial", 12))
         self.user_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
         
@@ -85,7 +94,7 @@ class ChatbotApp(ctk.CTk):
         self.send_button.grid(row=0, column=1, padx=(0, 10), pady=10)
         
         # Initialize chat messages
-        self.add_bot_message(f"Hello {self.current_user}! I'm your food ordering assistant. How can I help you today? You can ask about our menu or place an order.")
+        self.add_bot_message(f"Hello {self.current_user["username"]}! I'm your food ordering assistant. How can I help you today? You can ask about our menu or place an order.")
     
         self.main_frame.grid_rowconfigure(0, weight=0)  # User info frame doesn't need to expand
         self.main_frame.grid_rowconfigure(1, weight=1)  # Chat frame should expand to fill space
@@ -93,6 +102,7 @@ class ChatbotApp(ctk.CTk):
     def logout(self):
         # Clear current user
         self.current_user = None
+        clear_current_user()
         
         # Remove chatbot frame
         self.main_frame.grid_forget()

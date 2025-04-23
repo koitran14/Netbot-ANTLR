@@ -4,7 +4,7 @@ grammar Command;
 command: greeting* (order | topup)?;
 greeting: GREETING;
 order: ORDER_PREFIX? INTEGER ITEM (POLITE)?;
-topup: TOPUP_PREFIX NUMBER (CURRENCY)? (account_spec)? (POLITE)?;
+topup: TOPUP_PREFIX AMOUNT (CURRENCY)? (account_spec)? (POLITE)?;
 account_spec: 'to' ('my' 'account' | 'account' ACCOUNT_NAME);
 
 // Lexer rules
@@ -16,14 +16,15 @@ TOPUP_PREFIX: 'top up' | 'add money' | 'recharge' | 'fund my account' | 'add to 
               | 'can you top up' | 'i want to add' | 'please add' | 'top off my account';
 ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
 POLITE: 'please' | 'thanks' | 'thank you';
-CURRENCY: 'dollars' | 'usd' | 'vnd';
+CURRENCY: 'dollars' | 'usd';
 
 // General tokens
 ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
 
 // Unified number token for both integer and decimal amounts
+AMOUNT: INTEGER | FLOAT;
 INTEGER: [0-9]+;
-NUMBER: [0-9]+ ('.' [0-9]+)?;
+FLOAT: [0-9]+ ('.' [0-9]+);
 
 // Skip rules
 WS: [ \t\r\n]+ -> skip;
