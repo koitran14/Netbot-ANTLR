@@ -232,8 +232,9 @@ class ChatbotApp(ctk.CTk):
             f"\n- {quantity} {item}" for item, quantity in order_details["item_quantities"].items()
         ]
         items_text = ". ".join(formatted_items)
-        query = 'order ' + items_text
         
+        # Customize the order query to reuse the processor
+        query = 'order ' + ", ".join(formatted_items)
         self.get_bot_response(query) # submit query to call the processor under leaves.
 
         # Format total
