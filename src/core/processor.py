@@ -33,12 +33,12 @@ class CommandProcessor(CommandVisitor):
         return {"intent": "TOPUP", "message": f"You want to top up {amount} {currency} {account} {polite}!"}
     
     def visitOrder(self, ctx: CommandParser.OrderContext):
-        if not ctx.NUMBER():
+        if not ctx.INTEGER():
             return {"intent": "ORDER", "message": "Missing amount"}
         if not ctx.ITEM():
             return {"intent": "ORDER", "message": "Missing item"}
 
-        amount = ctx.NUMBER().getText()
+        amount = ctx.INTEGER().getText()
         
         # Validate that the amount is a whole number (no decimal point)
         if '.' in amount:

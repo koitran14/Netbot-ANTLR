@@ -3,7 +3,7 @@ grammar Command;
 // Parser rules
 command: greeting* (order | topup)?;
 greeting: GREETING;
-order: ORDER_PREFIX? NUMBER ITEM (POLITE)?;
+order: ORDER_PREFIX? INTEGER ITEM (POLITE)?;
 topup: TOPUP_PREFIX NUMBER (CURRENCY)? (account_spec)? (POLITE)?;
 account_spec: 'to' ('my' 'account' | 'account' ACCOUNT_NAME);
 
@@ -22,6 +22,7 @@ CURRENCY: 'dollars' | 'usd' | 'vnd';
 ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
 
 // Unified number token for both integer and decimal amounts
+INTEGER: [0-9]+;
 NUMBER: [0-9]+ ('.' [0-9]+)?;
 
 // Skip rules
