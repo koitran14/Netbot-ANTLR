@@ -167,3 +167,8 @@ pytest src/tests/
 - `cli.py` là giao diện chính hiện tại
 - Các thành phần khác như GUI, cấu hình, tài liệu chi tiết vẫn là chỗ đặt chỗ cho mở rộng
 
+## Environment:
+```bash
+SUPABASE_DB_URI=
+```
+
