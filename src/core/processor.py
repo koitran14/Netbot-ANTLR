@@ -10,7 +10,7 @@ class CommandProcessor(CommandVisitor):
     def visitTopup(self, ctx: CommandParser.TopupContext):
         if not ctx.TOPUP_PREFIX():
             return {"intent": "TOPUP", "message": "Oops, it looks like you forgot to say how you'd like to top up! Try something like 'top up 50 usd'."}
-        if not ctx.NUMBER():
+        if not ctx.NUMBER() or len(ctx.NUMBER().getText()) == 0 or ctx.NUMBER().getText() == "<missing NUMBER>":
             return {"intent": "TOPUP", "message": "Hmm, I need an amount to top up! Could you add something like '50' or '10.50'?"}
         
         topup_prefix = ctx.TOPUP_PREFIX().getText()
