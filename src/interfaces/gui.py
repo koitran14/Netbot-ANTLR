@@ -4,7 +4,7 @@ from datetime import datetime
 
 from src.core.parser import parse_command
 from src.core.processor import CommandProcessor
-from src.hooks import clear_current_user, set_current_user
+from src.hooks.session import clear_current_user, set_current_user
 from src.interfaces.components.login import LoginFrame
 from src.interfaces.components.menu import MenuPopup
 
@@ -178,7 +178,7 @@ class ChatbotApp(ctk.CTk):
             
             print(f"Response: {response}")
             
-            is_order = response["intent"] == 'ORDER'
+            is_order = response["intent"] == 'ORDER' and response["isMenuOpen"] == True
             
             if is_order:
                 self.order_in_progress = True
@@ -234,7 +234,11 @@ class ChatbotApp(ctk.CTk):
         items_text = ". ".join(formatted_items)
         
         # Customize the order query to reuse the processor
-        query = 'order ' + ", ".join(formatted_items)
+        format_query = [
+            f"{quantity} {item}" for item, quantity in order_details["item_quantities"].items()
+        ]
+        query = 'order ' + ", ".join(format_query)
+        print(f"Order query: {query}")
         self.get_bot_response(query) # submit query to call the processor under leaves.
 
         # Format total
