@@ -1,4 +1,6 @@
+import random
 from antlr4 import *
+from src.database.models.topup import TopupModel
 from src.database.models.user import UserModel
 from src.generated.CommandVisitor import CommandVisitor
 from src.generated.CommandParser import CommandParser
@@ -45,19 +47,33 @@ class CommandProcessor(CommandVisitor):
         currency = ctx.CURRENCY().getText() if ctx.CURRENCY() else ""  # Optional
         polite = ctx.POLITE().getText() if ctx.POLITE() else ""  # Optional
         account_spec = ctx.account_spec()
-        
-        account = account_spec.ACCOUNT_NAME().getText() if account_spec and account_spec.ACCOUNT_NAME() else current_user["username"]
-        account_message = account_spec.ACCOUNT_NAME().getText() if account_spec and account_spec.ACCOUNT_NAME() else "your account"
-
-        # Database execution to add amount
+        account = current_user['username']
+        account_message = "your account"
+        accId = current_user['id']
         user_model = UserModel()
-        update_amount = user_model.add_amount(account, float(amount))
+        
+        if account_spec and account_spec.ACCOUNT_NAME():
+            account = account_spec.ACCOUNT_NAME().getText()
+            account_message = f"{account}'s account"
+            if account != current_user["username"]:
+                target_user = user_model.read(account)
+                if not target_user:
+                    return {
+                        "intent": "TOPUP",
+                        "message": f"Sorry, I couldn’t find an account for '{account}'. Please check the username and try again!"
+                    }
+                                        
+            accId = target_user["id"]
+            
+        topup_model = TopupModel()
+        topup_model.add_topup(accId, float(amount))
+        update_amount = user_model.read(account)
 
         if update_amount is None:
             return {"intent": "TOPUP", "message": "Hmm, I couldn’t add that amount. Could you try again?"}
         return {
             "intent": "TOPUP",
-            "message": f"Great!\n\nYou have successfully topped up {amount} {currency} to {account_message}.\n\nCurrent total: {update_amount['amount']} $.\n\nThank you!"
+            "message": f"Great!\n\nYou have successfully topped up {amount} {currency} to {account_message}.\n\nCurrent total: {update_amount['total_amount']} $.\n\nThank you!"
         }
 
     def visitOrder(self, ctx: CommandParser.OrderContext):
@@ -78,4 +94,115 @@ class CommandProcessor(CommandVisitor):
             "intent": "ORDER",
             "message": f"You want to order {amount} of {ctx.ITEM().getText()}!",
             "isMenuOpen": False,
+        }
+        
+    def visitTopupQuery(self, ctx: CommandParser.TopupQueryContext):
+        current_user = get_current_user()  # Assumes returns {'id': BIGINT, 'username': str, 'uuid': UUID, ...}
+        print(f"current_user_id: {current_user['id']}")
+
+        if not ctx.QUERY_PREFIX():
+            return {
+                "intent": "QUERY_TOPUP",
+                "message": "Oops, it looks like you forgot to specify what to query! Try something like 'show me latest topup'."
+            }
+
+        query_type = "all"
+        if ctx.query_type():
+            query_type_text = ctx.query_type().getText()
+            if query_type_text == 'latest':
+                query_type = "latest"
+            elif query_type_text == 'oldest':
+                query_type = "oldest"
+            elif query_type_text == 'all':
+                query_type = "all"
+            else:
+                return {
+                    "intent": "QUERY_TOPUP",
+                    "message": "I didn’t understand the query type. Could you use 'latest', 'oldest', or 'all' topups?"
+                }
+
+        polite = ctx.POLITE().getText() if ctx.POLITE() else ""  # Optional
+        account_spec = ctx.account_spec()
+        account = current_user['username']
+        account_message = "your account"
+        user = current_user
+        user_model = UserModel()
+        
+        if account_spec and account_spec.ACCOUNT_NAME():
+            account = account_spec.ACCOUNT_NAME().getText()
+            account_message = f"{account}'s account"
+            if account != current_user["username"]:
+                target_user = user_model.read(account)
+                if not target_user:
+                    return {
+                        "intent": "TOPUP",
+                        "message": f"Sorry, I couldn’t find an account for '{account}'. Please check the username and try again!"
+                    }
+                                        
+            user = target_user
+
+        # Database execution to fetch top-up history
+        topup_model = TopupModel()
+        topups = topup_model.get_by_user(user['id'], query_type)  # Placeholder for DB executor
+
+        if not topups:
+            return {
+                "intent": "QUERY_TOPUP",
+                "message": f"Looks like there are no top-ups for {account_message} yet. Try topping up first!"
+            }
+
+        # Format the response based on query_type
+        intro_messages = [
+            f"Here’s the top-up history for {account_message}:",
+            f"Let me show you the top-up details for {account_message}:",
+            f"Got the top-up history for {account_message} right here:"
+        ]
+        response_message = f"{random.choice(intro_messages)}\n\n"
+
+        if query_type == "latest":
+            topup = topups[0]
+            response_message += (
+                f"\n===================================\n\n"
+                f"   Latest Top-up:\n\n"
+                f"   Amount: {topup['amount']:.2f} {topup['currency'].upper()}\n"
+                f"   Date: {topup['created_at'].strftime('%Y-%m-%d %H:%M:%S')}\n"
+            )
+        elif query_type == "oldest":
+            topup = topups[0]
+            response_message += (
+                f"\n===================================\n\n"
+                f"   Oldest Top-up:\n\n"
+                f"   Amount: {topup['amount']:.2f} {topup['currency'].upper()}\n"
+                f"   Date: {topup['created_at'].strftime('%Y-%m-%d %H:%M:%S')}\n"
+            )
+        else:  # all
+            if len(topups) == 1:
+                topup = topups[0]
+                response_message += (
+                    f"\n===================================\n\n"
+                    f"   Only Top-up:\n\n"
+                    f"   Amount: {topup['amount']:.2f} {topup['currency'].upper()}\n"
+                    f"   Date: {topup['created_at'].strftime('%Y-%m-%d %H:%M:%S')}\n"
+                )
+            else:
+                response_message += f"\n===================================\n\n"
+                response_message += f"All Top-ups ({len(topups)}):\n\n"
+
+                for i, topup in enumerate(topups, 1):
+                    response_message += (
+                        f"{i}.  Amount: {topup['amount']:.2f} {topup['currency'].upper()}\n"
+                        f"      Date: {topup['created_at'].strftime('%Y-%m-%d %H:%M:%S')} \n\n"
+                    )
+        response_message += f"\n===================================\n"
+
+        response_message += f"\nTotal Balance: {user['total_amount']:.2f} USD\n"
+        if polite:
+            polite_closures = ["You’re very welcome! 😊", "Happy to help! 😄", "My pleasure! ✨"]
+            response_message += f"\n{random.choice(polite_closures)}"
+        else:
+            response_message += "\nPlease check!"
+
+        return {
+            "intent": "QUERY_TOPUP",
+            "message": response_message
         }

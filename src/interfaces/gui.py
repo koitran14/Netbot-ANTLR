@@ -44,7 +44,7 @@ class ChatbotApp(ctk.CTk):
             "id": result[0],
             "username": result[1],
             "password": result[2],  # You can omit this if you don't want to return it
-            "amount": result[3],
+            "total_amount": result[3],
             "orders": result[4]
         """       
         self.current_user = user
