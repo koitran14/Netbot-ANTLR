@@ -3,10 +3,10 @@ grammar Command;
 // Parser rules
 command: greeting* (order | topup | topupQuery)?;
 greeting: GREETING;
-order: ORDER_PREFIX? INTEGER ITEM (POLITE)?;
+order: ORDER_PREFIX INTEGER ITEM (POLITE)?;
 topup: TOPUP_PREFIX amount (CURRENCY)? (account_spec)? (POLITE)?;
 topupQuery: QUERY_PREFIX (query_type)? ('topup' | 'topups' | 'topup history') (account_spec)? (POLITE)?;
-query_type: 'latest' | 'oldest' | 'all';
+query_type: 'latest' | 'newest' | 'oldest' | 'all';
 
 amount: INTEGER | FLOAT;
 account_spec: 'to' ('my' 'account' | 'account' ACCOUNT_NAME);
@@ -14,7 +14,7 @@ account_spec: 'to' ('my' 'account' | 'account' ACCOUNT_NAME);
 // Lexer rules
 GREETING: 'hello' | 'hi' | 'hey' | 'good morning' | 'good afternoon';
 ORDER_PREFIX: 'order' | 'i want' | 'give me' | 'can i have' | 'please get me' | 'i’d like';
-TOPUP_PREFIX: 'top up' | 'add money' | 'recharge' | 'fund my account' | 'add to my account' 
+TOPUP_PREFIX: 'top up' | 'top off' | 'add' | 'add money' | 'recharge' | 'fund my account' | 'add to my account' 
               | 'could you add' | 'please top off' | 'i need to put' | 'put some money' 
               | 'load up' | 'can you top up' | 'i want to add' | 'please add' 
               | 'top off my account' | 'i’d like to add' | 'can i add' | 'let’s add' 

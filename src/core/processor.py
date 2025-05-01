@@ -8,8 +8,52 @@ from src.hooks.session import get_current_user
 
 class CommandProcessor(CommandVisitor):
     def visitGreeting(self, ctx: CommandParser.GreetingContext):
-        greeting = ctx.GREETING().getText()
-        return {"intent": "GREETING", "message": f"Hi, what do you want? You said: {greeting}"} 
+        greeting = ctx.GREETING().getText().lower()
+        current_user = get_current_user()
+        username = current_user['username']
+        
+        greeting_responses = {
+            "hello": [
+                f"Hello, {username}! Great to see you!",
+                f"Hi {username}! Ready to get started?"
+            ],
+            "hi": [
+                f"Hi {username}! Excited to help you today!",
+                f"Hey {username}, what's up?"
+            ],
+            "hey": [
+                f"Hey {username}! What's on your mind?",
+                f"Yo {username}, let's make something happen!"
+            ],
+            "good morning": [
+                f"Good morning, {username}! Perfect time for a coffee!",
+                f"Morning {username}! Ready to kickstart your day?"
+            ],
+            "good afternoon": [
+                f"Good afternoon, {username}! Hungry for some pizza?",
+                f"Hey {username}, happy afternoon! What's next?"
+            ]
+        }
+         
+        default_responses = [
+            f"Hey {username}, nice to hear from you!",
+            f"Hi {username}! What's up today?",
+            f"Hello {username}, ready to dive in?"
+        ]
+        
+        response_options = greeting_responses.get(greeting, default_responses)
+        greeting_message = random.choice(response_options)
+        
+        services_intro = (
+            "\n\nYou can order something tasty like coffee or pizza, "
+            "top up your account with some dollars, "
+            "or check your top-up history. Just let me know what you want to do!"
+        )
+         
+        return {
+            "intent": "GREETING",
+            "message": f"{greeting_message}{services_intro}"
+        }
 
     def visitTopup(self, ctx: CommandParser.TopupContext):
         current_user = get_current_user()
@@ -79,7 +123,7 @@ class CommandProcessor(CommandVisitor):
     def visitOrder(self, ctx: CommandParser.OrderContext):
         current_user = get_current_user()
 
-        if not ctx.INTEGER().getText():
+        if not ctx.INTEGER():
             return {"intent": "ORDER", "message": "Yeah sure, please select directly from the menu!", "isMenuOpen": True}
         if not ctx.ITEM():
             return {"intent": "ORDER", "message": "Hmm, maybe you'd like to order something from the menu? Please check!", "isMenuOpen": True}
@@ -100,16 +144,10 @@ class CommandProcessor(CommandVisitor):
         current_user = get_current_user()  # Assumes returns {'id': BIGINT, 'username': str, 'uuid': UUID, ...}
         print(f"current_user_id: {current_user['id']}")
 
-        if not ctx.QUERY_PREFIX():
-            return {
-                "intent": "QUERY_TOPUP",
-                "message": "Oops, it looks like you forgot to specify what to query! Try something like 'show me latest topup'."
-            }
-
         query_type = "all"
         if ctx.query_type():
             query_type_text = ctx.query_type().getText()
-            if query_type_text == 'latest':
+            if query_type_text == 'latest' or query_type_text =='newest':
                 query_type = "latest"
             elif query_type_text == 'oldest':
                 query_type = "oldest"
