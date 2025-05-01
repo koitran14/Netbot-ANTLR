@@ -39,11 +39,11 @@ MENU = {
 
 
 class MenuPopup(ctk.CTkToplevel):
-    def __init__(self, master, on_order_complete):
+    def __init__(self, master, on_order_complete,current_user):
         super().__init__(master)
         self.master = master
         self.on_order_complete = on_order_complete
-        
+        self.current_user = current_user 
         # Configure window
         self.title("Food & Drink Menu")
         self.geometry("700x600")

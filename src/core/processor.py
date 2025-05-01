@@ -1,10 +1,14 @@
 import random
 from antlr4 import *
+from src.database.models.menu import get_menu_item_by_name, get_menu_item_name_by_id
 from src.database.models.topup import TopupModel
+from src.database.models.order import OrderModel
+from src.database.models.order_item import OrderItemModel
 from src.database.models.user import UserModel
 from src.generated.CommandVisitor import CommandVisitor
 from src.generated.CommandParser import CommandParser
 from src.hooks.session import get_current_user
+from src.database.client import pg_client
 
 class CommandProcessor(CommandVisitor):
     def visitGreeting(self, ctx: CommandParser.GreetingContext):
@@ -57,27 +61,15 @@ class CommandProcessor(CommandVisitor):
 
     def visitTopup(self, ctx: CommandParser.TopupContext):
         current_user = get_current_user()
-        print(f"current_user_id: {current_user["id"]}")
-        
         if not ctx.TOPUP_PREFIX():
-            return {"intent": "TOPUP", "message": "Oops, it looks like you forgot to say how you'd like to top up! Try something like 'top up 50 usd'."}
+            return {"intent": "TOPUP", "message": "Please specify how much you want to top up."}
         
         amount_ctx = ctx.amount()
         if not amount_ctx:
-            return {"intent": "TOPUP", "message": "Hmm, I need an amount to top up! Could you add something like '50' or '10.50'?"}
-        
-        # Extract amount from INTEGER or FLOAT
-        amount = None
+            return {"intent": "TOPUP", "message": "Please provide a valid amount."}
+
         if amount_ctx.INTEGER():
-            integer_node = amount_ctx.INTEGER()
-            if isinstance(integer_node, list):
-                integer_node = integer_node[0]  # Take the first node if it's a list
-            amount = integer_node.getText()
-        elif amount_ctx.FLOAT():
-            float_node = amount_ctx.FLOAT()
-            if isinstance(float_node, list):
-                float_node = float_node[0]  # Take the first node if it's a list
-            amount = float_node.getText()
+            amount = int(amount_ctx.INTEGER().getText())
         else:
             return {"intent": "TOPUP", "message": "Hmm, I couldn’t find a valid amount. Please try again with a number like '50' or '10.50'."}
         
@@ -123,22 +115,76 @@ class CommandProcessor(CommandVisitor):
     def visitOrder(self, ctx: CommandParser.OrderContext):
         current_user = get_current_user()
 
-        if not ctx.INTEGER():
-            return {"intent": "ORDER", "message": "Yeah sure, please select directly from the menu!", "isMenuOpen": True}
-        if not ctx.ITEM():
-            return {"intent": "ORDER", "message": "Hmm, maybe you'd like to order something from the menu? Please check!", "isMenuOpen": True}
+        # Xử lý nhiều item_quantity
+        items = []
+        total_price = 0
 
-        amount = ctx.INTEGER().getText()
-        
-        # Validate that the amount is a whole number (no decimal point)
-        if '.' in amount:
-            return {"intent": "ORDER", "message": "Oops, the quantity should be a whole number!", "isMenuOpen": True}
+        for item_ctx in ctx.item_quantity():
+            quantity = int(item_ctx.INTEGER().getText())
+            item_name = item_ctx.ITEM().getText()
 
-        return {
-            "intent": "ORDER",
-            "message": f"You want to order {amount} of {ctx.ITEM().getText()}!",
-            "isMenuOpen": False,
-        }
+            menu_item = get_menu_item_by_name(item_name)
+            if not menu_item:
+                return {"intent": "ORDER", "message": f"Item '{item_name}' not found."}
+
+            items.append((menu_item, quantity))
+            total_price += menu_item['price'] * quantity
+
+        try:
+            # Insert orders
+            order_query = """
+                INSERT INTO orders (user_id, total_amount)
+                VALUES (%s, %s)
+                RETURNING id
+            """
+            new_order = pg_client.insert(order_query, (current_user["id"], total_price))
+
+            # Insert từng món vào order_items
+            for menu_item, quantity in items:
+                order_item_query = """
+                    INSERT INTO order_items (order_id, menu_item_id, quantity, price_at_order)
+                    VALUES (%s, %s, %s, %s)
+                """
+                pg_client.insert(order_item_query, (
+                    new_order['id'],
+                    menu_item['id'],
+                    quantity,
+                    menu_item['price']
+                ))
+
+            item_list_text = ", ".join([f"{q} x {m['name']}" for m, q in items])
+
+            return {
+                "intent": "ORDER",
+                "message": f"Created order #{new_order['id']} for {item_list_text}\nTotal: ${total_price:.2f}"
+            }
+
+        except Exception as e:
+            print("Error inserting order:", str(e))
+            return {"intent": "ORDER", "message": "Failed to create order."}
+
+    def visitQuery_order(self, ctx: CommandParser.Query_orderContext):
+        current_user = get_current_user()
+        order_model = OrderModel()
+        orders = order_model.list_by_user(current_user["id"])
+
+        if not orders:
+            return {"intent": "QUERY_ORDER", "message": "You haven't placed any orders yet."}
+
+        order_item_model = OrderItemModel()
+        response = "Here's your order history:\n"
+        for order in orders:
+            response += f"\nOrder #{order['id']} - {order['created_at'].strftime('%d/%m/%Y %H:%M')}\n"
+            items = order_item_model.list_by_order(order['id'])
+
+            for item in items:
+                item_name = get_menu_item_name_by_id(item['menu_item_id'])
+                response += f"   - {item_name} x{item['quantity']} (Price at order: ${item['price_at_order']:.2f})\n"
+
+            response += f"    Total amount: ${order['total_amount']:.2f}\n"
+
+        return {"intent": "QUERY_ORDER", "message": response}
+
         
     def visitTopupQuery(self, ctx: CommandParser.TopupQueryContext):
         current_user = get_current_user()  # Assumes returns {'id': BIGINT, 'username': str, 'uuid': UUID, ...}

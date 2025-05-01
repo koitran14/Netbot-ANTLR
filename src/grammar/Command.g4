@@ -1,15 +1,21 @@
 grammar Command;
 
 // Parser rules
-command: greeting* (order | topup | topupQuery)?;
+command: greeting* (order | topup | topupQuery | query_order)?;
 greeting: GREETING;
-order: ORDER_PREFIX INTEGER ITEM (POLITE)?;
+
+// CHỈNH ĐỂ ORDER NHIỀU MÓN
+order: ORDER_PREFIX item_quantity (CONJ item_quantity)* (POLITE)?;
+
+item_quantity: INTEGER ITEM;
+
 topup: TOPUP_PREFIX amount (CURRENCY)? (account_spec)? (POLITE)?;
 topupQuery: QUERY_PREFIX (query_type)? ('topup' | 'topups' | 'topup history') (account_spec)? (POLITE)?;
 query_type: 'latest' | 'newest' | 'oldest' | 'all';
 
 amount: INTEGER | FLOAT;
 account_spec: 'to' ('my' 'account' | 'account' ACCOUNT_NAME);
+query_order: QUERY_ORDER_PREFIX (POLITE)?;
 
 // Lexer rules
 GREETING: 'hello' | 'hi' | 'hey' | 'good morning' | 'good afternoon';
@@ -30,12 +36,13 @@ QUERY_PREFIX: 'show' | 'get' | 'list' | 'display' | 'tell me' | 'show me'
               | 'show the' | 'give me the' | 'i want to check' | 'can i check' 
               | 'tell me the' | 'what about' | 'review' | 'bring up' | 'let’s see';
 ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
+QUERY_ORDER_PREFIX: 
+    'show my orders' | 'list my orders' | 'show previous orders' | 'list previous orders' | 'what did i order' | 'my order history';
 POLITE: 'please' | 'thanks' | 'thank you';
 CURRENCY: 'dollars' | 'usd';
+CONJ: 'and' | ','; // Cho phép nối các món bằng "and" hoặc dấu ","
 
 ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
-
-// Unified number token for both integer and decimal amounts
 INTEGER: [0-9]+;
 FLOAT: [0-9]+ '.' [0-9]+;
 
