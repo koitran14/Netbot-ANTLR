@@ -3,36 +3,36 @@ import customtkinter as ctk
 MENU = {
     "food": {
         "Main Dishes": [
-            {"id": 1, "name": "Burger", "price": 8.99, "description": "Juicy beef patty with lettuce, tomato, and cheese"},
-            {"id": 2, "name": "Pizza", "price": 12.99, "description": "Classic pepperoni pizza with mozzarella"},
-            {"id": 4, "name": "Pasta", "price": 10.99, "description": "Spaghetti with marinara sauce"}
+            {"id": 1, "name": "Burger", "price": 8.99, "description": "Juicy beef patty with lettuce, tomato, and cheese", "pluralName": "Burgers"},
+            {"id": 2, "name": "Pizza", "price": 12.99, "description": "Classic pepperoni pizza with mozzarella", "pluralName": "Pizzas"},
+            {"id": 4, "name": "Pasta", "price": 10.99, "description": "Spaghetti with marinara sauce", "pluralName": "Pastas"}
         ],
         "Sides": [
-            {"id": 3, "name": "Salad", "price": 6.99, "description": "Fresh garden salad with vinaigrette"},
-            {"id": 5, "name": "French Fries", "price": 3.99, "description": "Crispy golden fries with sea salt"},
-            {"id": 6, "name": "Onion Rings", "price": 4.99, "description": "Crispy battered onion rings"}
+            {"id": 3, "name": "Salad", "price": 6.99, "description": "Fresh garden salad with vinaigrette", "pluralName": "Salads"},
+            {"id": 5, "name": "French Fries", "price": 3.99, "description": "Crispy golden fries with sea salt", "pluralName": "French Fries"},
+            {"id": 6, "name": "Onion Rings", "price": 4.99, "description": "Crispy battered onion rings", "pluralName": "Onion Rings"}
         ],
         "Desserts": [
-            {"id": 7, "name": "Cheesecake", "price": 5.99, "description": "New York style cheesecake"},
-            {"id": 8, "name": "Ice Cream", "price": 4.49, "description": "Vanilla ice cream with chocolate sauce"},
-            {"id": 9, "name": "Brownie", "price": 4.99, "description": "Warm chocolate brownie with walnuts"}
+            {"id": 7, "name": "Cheesecake", "price": 5.99, "description": "New York style cheesecake", "pluralName": "Cheesecakes"},
+            {"id": 8, "name": "Ice Cream", "price": 4.49, "description": "Vanilla ice cream with chocolate sauce", "pluralName": "Ice Creams"},
+            {"id": 9, "name": "Brownie", "price": 4.99, "description": "Warm chocolate brownie with walnuts", "pluralName": "Brownies"}
         ]
     },
     "drink": {
         "Hot Drinks": [
-            {"id": 101, "name": "Coffee", "price": 3.49, "description": "Freshly brewed coffee"},
-            {"id": 102, "name": "Tea", "price": 2.99, "description": "Hot tea with optional lemon or milk"},
-            {"id": 103, "name": "Hot Chocolate", "price": 3.99, "description": "Rich hot chocolate with whipped cream"}
+            {"id": 101, "name": "Coffee", "price": 3.49, "description": "Freshly brewed coffee", "pluralName": "Coffees"},
+            {"id": 102, "name": "Tea", "price": 2.99, "description": "Hot tea with optional lemon or milk", "pluralName": "Teas"},
+            {"id": 103, "name": "Hot Chocolate", "price": 3.99, "description": "Rich hot chocolate with whipped cream", "pluralName": "Hot Chocolates"}
         ],
         "Cold Drinks": [
-            {"id": 104, "name": "Soda", "price": 2.49, "description": "Cola, lemon-lime, or root beer"},
-            {"id": 105, "name": "Iced Tea", "price": 2.99, "description": "Freshly brewed iced tea"},
-            {"id": 106, "name": "Lemonade", "price": 3.49, "description": "Fresh squeezed lemonade"}
+            {"id": 104, "name": "Soda", "price": 2.49, "description": "Cola, lemon-lime, or root beer", "pluralName": "Sodas"},
+            {"id": 105, "name": "Iced Tea", "price": 2.99, "description": "Freshly brewed iced tea", "pluralName": "Iced Teas"},
+            {"id": 106, "name": "Lemonade", "price": 3.49, "description": "Fresh squeezed lemonade", "pluralName": "Lemonades"}
         ],
         "Smoothies": [
-            {"id": 107, "name": "Fruit Smoothie", "price": 4.99, "description": "Blended fruits with yogurt"},
-            {"id": 108, "name": "Protein Shake", "price": 5.99, "description": "Protein-rich shake with banana and milk"},
-            {"id": 109, "name": "Green Smoothie", "price": 5.49, "description": "Spinach, kale, and fruit blend"}
+            {"id": 107, "name": "Fruit Smoothie", "price": 4.99, "description": "Blended fruits with yogurt", "pluralName": "Fruit Smoothies"},
+            {"id": 108, "name": "Protein Shake", "price": 5.99, "description": "Protein-rich shake with banana and milk", "pluralName": "Protein Shakes"},
+            {"id": 109, "name": "Green Smoothie", "price": 5.49, "description": "Spinach, kale, and fruit blend", "pluralName": "Green Smoothies"}
         ]
     }
 }

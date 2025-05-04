@@ -118,14 +118,20 @@ class CommandProcessor(CommandVisitor):
         # Xử lý nhiều item_quantity
         items = []
         total_price = 0
+        
+        if not ctx.item_quantity() or len(ctx.item_quantity()) == 0:
+            return {"intent": "ORDER", "message": "Yeah sure, here's your menu.", "isMenuOpen": True}
 
         for item_ctx in ctx.item_quantity():
+            if not item_ctx.INTEGER() or not item_ctx.ITEM():
+                return {"intent": "ORDER", "message": "Yeah sure, here's your menu.", "isMenuOpen": True}
+
             quantity = int(item_ctx.INTEGER().getText())
-            item_name = item_ctx.ITEM().getText()
+            item_name = item_ctx.ITEM().getText().lower()
 
             menu_item = get_menu_item_by_name(item_name)
             if not menu_item:
-                return {"intent": "ORDER", "message": f"Item '{item_name}' not found."}
+                return {"intent": "ORDER", "message": f"Item '{item_name}' not found. Please check the menu again!", "isMenuOpen": True}
 
             items.append((menu_item, quantity))
             total_price += menu_item['price'] * quantity
@@ -152,12 +158,22 @@ class CommandProcessor(CommandVisitor):
                     menu_item['price']
                 ))
 
-            item_list_text = ", ".join([f"{q} x {m['name']}" for m, q in items])
+             # Format items_text with each item on a new line
+            items_text = "\n".join([f"- {q} {m['pluralName'] if q != 1 else m['name']}" for m, q in items])
 
+            # Create confirmation message using the template
+            confirmation = (
+                f"Thank you for your order!\n\n"
+                f"Items: \n\n{items_text}\n"
+                "\n--------------------\n"
+                f"\nTotal: ${total_price:.2f}\n\n"
+                f"Your order will be ready soon!"
+            )
+            
             return {
                 "intent": "ORDER",
-                "message": f"Created order #{new_order['id']} for {item_list_text}\nTotal: ${total_price:.2f}"
-            }
+                "message": confirmation
+                }
 
         except Exception as e:
             print("Error inserting order:", str(e))

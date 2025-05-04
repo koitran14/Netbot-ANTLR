@@ -37,7 +37,7 @@ class OrderItemModel:
         try:
             with conn.cursor() as cur:
                 cur.execute(
-                    f"SELECT id, order_id, menu_item_id, quantity, price_at_order FROM {self.table} WHERE order_id = %s",
+                    f"SELECT id, order_id, menu_item_id, quantity, price_at_order FROM {self.table} WHERE order_id = %s ORDER BY id DESC",
                     (order_id,)
                 )
                 results = cur.fetchall()

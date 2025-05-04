@@ -35,9 +35,9 @@ QUERY_PREFIX: 'show' | 'get' | 'list' | 'display' | 'tell me' | 'show me'
               | 'could you show me' | 'please check' | 'how about' | 'let me see' 
               | 'show the' | 'give me the' | 'i want to check' | 'can i check' 
               | 'tell me the' | 'what about' | 'review' | 'bring up' | 'let’s see';
-ITEM: 'coffee' | 'tea' | 'pizza' | 'burger' | 'sandwich' | 'soda' | 'water' | 'juice';
+ITEM: [a-zA-Z]+;
 QUERY_ORDER_PREFIX: 
-    'show my orders' | 'list my orders' | 'show previous orders' | 'list previous orders' | 'what did i order' | 'my order history';
+    'show my orders' | 'show my order' | 'list my orders' | 'list my order' | 'show previous orders' | 'show previous order' | 'list previous orders' | 'list previous order' | 'what did i order' | 'my order history';
 POLITE: 'please' | 'thanks' | 'thank you';
 CURRENCY: 'dollars' | 'usd';
 CONJ: 'and' | ','; // Cho phép nối các món bằng "and" hoặc dấu ","

@@ -44,7 +44,7 @@ class OrderModel:
         try:
             with conn.cursor() as cur:
                 cur.execute(
-                    f"SELECT id, user_id, total_amount, status, created_at FROM {self.table} WHERE id = %s",
+                    f"SELECT id, user_id, total_amount, status, created_at FROM {self.table} WHERE id = %s ORDER BY id DESC",
                     (order_id,)
                 )
                 result = cur.fetchone()
@@ -65,7 +65,7 @@ class OrderModel:
         try:
             with conn.cursor() as cur:
                 cur.execute(
-                    f"SELECT id, user_id, total_amount, status, created_at FROM {self.table} WHERE user_id = %s",
+                    f"SELECT id, user_id, total_amount, status, created_at FROM {self.table} WHERE user_id = %s ORDER BY id DESC",
                     (user_id,)
                 )
                 results = cur.fetchall()

@@ -175,9 +175,9 @@ class ChatbotApp(ctk.CTk):
         total_text = f"${order_details['total']:.2f}"
         confirmation = (
             f"Thank you for your order!\n\n"
-            f"Items: {items_text}\n"
-            "--------------------\n"
-            f"Total: {total_text}\n\n"
+            f"Items: \n\n{items_text}\n"
+            "\n--------------------\n"
+            f"\nTotal: {total_text}\n\n"
             f"Your order will be ready soon!"
         )
         self.add_bot_message(confirmation)
