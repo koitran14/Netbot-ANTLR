@@ -80,7 +80,11 @@ class CommandProcessor(CommandVisitor):
         
         print(f"Currency: {ctx.CURRENCY()}")
         
+        if not ctx.CURRENCY():
+            return {"intent": "TOPUP", "message": f"Invalid currrency. We only allow to topup in dollars or usd. Please try again!"}
+        
         currency = ctx.CURRENCY().getText() if ctx.CURRENCY() else ""  # Optional
+        
         polite = ctx.POLITE().getText() if ctx.POLITE() else ""  # Optional
         account_spec = ctx.account_spec()
         account = current_user['username']

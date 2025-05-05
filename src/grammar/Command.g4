@@ -9,7 +9,7 @@ order: ORDER_PREFIX item_quantity (CONJ item_quantity)* (POLITE)?;
 
 item_quantity: INTEGER ITEM;
 
-topup: TOPUP_PREFIX amount (CURRENCY)? (account_spec)? (POLITE)?;
+topup: TOPUP_PREFIX amount CURRENCY (account_spec)? (POLITE)?;
 topupQuery: QUERY_PREFIX (query_type)? ('topup' | 'topups' | 'topup history') (account_spec)? (POLITE)?;
 query_type: 'latest' | 'newest' | 'oldest' | 'all';
 
@@ -35,11 +35,11 @@ QUERY_PREFIX: 'show' | 'get' | 'list' | 'display' | 'tell me' | 'show me'
               | 'could you show me' | 'please check' | 'how about' | 'let me see' 
               | 'show the' | 'give me the' | 'i want to check' | 'can i check' 
               | 'tell me the' | 'what about' | 'review' | 'bring up' | 'let’s see';
+CURRENCY: 'dollars' | 'usd';
 ITEM: [a-zA-Z]+;
 QUERY_ORDER_PREFIX: 
     'show my orders' | 'show my order' | 'list my orders' | 'list my order' | 'show previous orders' | 'show previous order' | 'list previous orders' | 'list previous order' | 'what did i order' | 'my order history';
 POLITE: 'please' | 'thanks' | 'thank you';
-CURRENCY: 'dollars' | 'usd';
 CONJ: 'and' | ','; // Cho phép nối các món bằng "and" hoặc dấu ","
 
 ACCOUNT_NAME: [a-zA-Z][a-zA-Z0-9]*;
