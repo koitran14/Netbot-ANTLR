@@ -11,9 +11,7 @@ A natural language-driven chatbot that automates food ordering and game account 
 
 ## 📽 Demo
 
-[![Watch the demo](https://img.youtube.com/vi/L75SCaAraMw/hqdefault.jpg)](https://youtu.be/L75SCaAraMw)
-> Click the image above to watch the full demo on YouTube.
-
+👉 [Click here to watch the demo video](https://youtu.be/L75SCaAraMw)
 
 The video walks through:
 - Greeting the chatbot naturally
