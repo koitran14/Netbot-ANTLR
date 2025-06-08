@@ -1,174 +1,209 @@
-Hướng Dẫn Cấu Trúc Dự Án Python + ANTLR4
+Here is a professional, structured, and developer-friendly `README.md` for your GitHub project [PPL-Project](https://github.com/koitran14/PPL-Project), based on the codebase, your demo video, and content from the final report PDF:
 
-Đây là tài liệu hướng dẫn cho một dự án Python sử dụng ANTLR4, được thiết kế với cấu trúc chung, linh hoạt và dễ mở rộng. Dự án này phù hợp cho các ứng dụng như công cụ phân tích cú pháp, chatbot, hoặc hệ thống xử lý ngôn ngữ tự nhiên. Tài liệu bao gồm cách clone và thiết lập môi trường, cấu trúc thư mục dự án kèm bảng giải thích chi tiết, và cách chạy chương trình.
+---
 
-## Table of Contents
-- [Cách Clone và Thiết Lập Môi Trường](#cach-clone-va-thiet-lap-moi-truong)
-- [Cấu Trúc Dự Án](#cau-truc-du-an)
-  - [Cây Thư Mục](#cay-thu-muc)
-  - [Giải Thích Cấu Trúc](#giai-thich-cau-truc)
-- [Cách Chạy](#cach-chay)
+````markdown
+# 🧠 NetBot: Chatbot for Internet Café Order System
 
-## Cách Clone và Thiết Lập Môi Trường
-1. **Clone kho mã nguồn**
+A natural language-driven chatbot that automates food ordering and game account top-ups for internet cafés, designed for seamless integration in local desktop environments.
+
+![Python](https://img.shields.io/badge/Made%20With-Python-3670A0?style=flat&logo=python&logoColor=white)
+![ANTLR4](https://img.shields.io/badge/Powered%20By-ANTLR4-red)
+![License](https://img.shields.io/github/license/koitran14/PPL-Project)
+
+---
+
+## 📽 Demo
+
+▶️ **Watch Demo on YouTube**: [NetBot in Action](https://youtu.be/L75SCaAraMw)
+
+The video walks through:
+- Greeting the chatbot naturally
+- Ordering food and beverages using flexible commands
+- Recharging game accounts with customizable inputs
+- Checking order and top-up history
+- Using both CLI and GUI interfaces
+
+---
+
+## 📌 Introduction
+
+**NetBot** is a smart assistant designed for Internet Cafés to:
+- Simplify food and beverage orders
+- Enable self-service top-ups for game accounts
+- Streamline customer service with an intuitive chatbot interface
+
+Built with **Python**, **ANTLR4**, and **Supabase**, NetBot helps reduce staff workload, improve service speed, and deliver a better customer experience—especially in high-traffic gaming environments.
+
+---
+
+## ✨ Features
+
+- 🗨 **Natural Language Chatbot** for order and top-up interactions
+- 🍔 **Menu-Based Ordering** with support for multiple items
+- 💳 **Game Account Top-up** with currency and amount recognition
+- 📜 **Order and Top-up History Tracking**
+- 🎛 **Command-line (CLI) and GUI Interface** using CustomTkinter
+- 📦 **Modular Grammar & Processor Design** for easy maintenance
+- 🔐 **User Authentication** and account-specific transactions
+- 🧩 **Extendable via Supabase (PostgreSQL)** backend
+
+---
+
+## ⚙ Installation
+
+### 1. Clone Repository
 ```bash
-git clone <repo-url>
-cd project_name
-```
-2. **Tạo và kích hoạt môi trường ảo**
+git clone https://github.com/koitran14/PPL-Project.git
+cd PPL-Project
+````
+
+### 2. Create Python Virtual Environment
+
 ```bash
-python3 -m venv venv
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
-- Trên Windows:
-```bash
-venv\Scripts\activate
-```
-- Trên Linux/macOS:
-```bash
-source venv/bin/activate
-```
-3. **Cài đặt các thư viện cần thiết**
+
+### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
-4. **Đảm bảo Java đã được cài đặt**
+
+### 4. Compile ANTLR Grammar
+
+Ensure ANTLR is installed and generate parser files:
+
 ```bash
-java -version
-```
-5. **Tạo mã nguồn từ file ngữ pháp**
-```bash
-python run.py gen
-```
-hoặc
-```bash
-./scripts/generate_parser.sh
-```
-- Trên Windows:
-```bash
-bash scripts/generate_parser.sh
-```
-- Hoặc chạy trực tiếp:
-```bash
-java -jar lib/antlr-4.9.2-complete.jar -Dlanguage=Python3 -visitor -o src/generated src/grammar/Command.g4
+antlr4 -Dlanguage=Python3 -o src/generated src/grammar/Command.g4
 ```
 
-## Cấu Trúc Dự Án
-### Cây Thư Mục
-```
-project_name/
-├── lib/
-│   └── antlr-4.9.2-complete.jar
-├── src/
-│   ├── grammar/
-│   │   └── Command.g4
-│   ├── generated/
-│   │   ├── CommandLexer.py
-│   │   ├── CommandParser.py
-│   │   ├── CommandListener.py
-│   │   ├── CommandVisitor.py
-│   ├── core/
-│   │   ├── __init__.py
-│   │   ├── parser.py
-│   │   ├── processor.py
-│   │   ├── models.py
-│   │   └── utils.py
-│   ├── interfaces/
-│   │   ├── __init__.py
-│   │   ├── cli.py
-│   │   └── gui.py
-│   ├── storage/
-│   │   ├── __init__.py
-│   │   ├── database.py
-│   │   └── schema.sql
-│   └── tests/
-│       ├── __init__.py
-│       ├── test_parser.py
-│       ├── test_processor.py
-│       └── test_integration.py
-├── config/
-│   ├── settings.py
-│   └── logging.conf
-├── scripts/
-│   ├── generate_parser.sh
-│   └── setup_env.sh
-├── docs/
-│   ├── api.md
-│   └── architecture.md
-├── requirements.txt
-├── README.md
-├── LICENSE
-└── .gitignore
+### 5. Set Up Database
+
+Use [Supabase](https://supabase.com) and apply the schema in `src/database/migrations/schema.sql`.
+
+### 6. Run the GUI Application
+
+```bash
+python src/interfaces/gui.py
 ```
 
-### Giải Thích Cấu Trúc
-| Đường dẫn | Mô tả |
-|-----------|-------|
-| `lib/` | Chứa file JAR của ANTLR4 để tạo mã Python từ file ngữ pháp `.g4`. |
-| `src/grammar/Command.g4` | Định nghĩa ngữ pháp của dự án sử dụng ANTLR4. |
-| `src/generated/` | Chứa mã Python được tạo từ file ngữ pháp, không nên chỉnh sửa thủ công. |
-| `src/core/` | Gồm parser, processor và các logic xử lý trung tâm. |
-| `src/interfaces/` | Giao diện CLI và GUI (GUI chưa triển khai). |
-| `src/storage/` | Xử lý lưu trữ bằng SQLite và schema cơ sở dữ liệu. |
-| `src/tests/` | Chứa các unit test và integration test sử dụng `pytest`. |
-| `config/` | Chứa cấu hình settings và logging. |
-| `scripts/` | Script tiện ích cho việc setup và tạo parser. |
-| `docs/` | Tài liệu mô tả API và kiến trúc (đặt chỗ). |
-| `requirements.txt` | Danh sách thư viện yêu cầu. |
-| `README.md` | Tài liệu hướng dẫn chính. |
-| `LICENSE` | Giấy phép sử dụng mã nguồn. |
-| `.gitignore` | Loại trừ các file không cần thiết cho git. |
+To use the CLI instead:
 
-## Cách Chạy
-1. **Thiết lập môi trường**: Làm theo phần "Cách Clone và Thiết Lập Môi Trường"
-2. Dịch script:
 ```bash
-python run.py gen
-```
-hoặc
-```bash
-python -m src.interfaces.cli
-```
-3. **Chạy giao diện GUI**
-```bash
-python run.py cli
-```
-hoặc
-```bash
-python -m src.interfaces.cli
-```
-- Trên Windows (nếu lỗi):
-```bash
-set PYTHONPATH=%PYTHONPATH%;%CD%
 python src/interfaces/cli.py
 ```
-4. **Chạy giao diện CLI**
-```bash
-python run.py cli
-```
-hoặc
-```bash
-python -m src.interfaces.cli
-```
-- Trên Windows (nếu lỗi):
-```bash
-set PYTHONPATH=%PYTHONPATH%;%CD%
-python src/interfaces/cli.py
-```
-5. **Tương tác**: Nhập các lệnh theo ngữ pháp (ví dụ: I want to add 8 dollars.`).
-6. **Chạy kiểm tra**:
-```bash
-pytest src/tests/
+
+---
+
+## 🚀 Usage
+
+* **Place Orders**:
+
+  ```
+  I want 2 pizzas and 1 coffee please
+  ```
+* **Top-up Game Account**:
+
+  ```
+  top up 50 dollars to my account
+  ```
+* **Check Top-up History**:
+
+  ```
+  show my topup history
+  ```
+* **Review Past Orders**:
+
+  ```
+  what did I order?
+  ```
+
+GUI users can log in, view the full menu, and interact with the chatbot via a user-friendly interface.
+
+---
+
+## 🛠 Configuration / Customization
+
+* **Grammar Rules**:
+  Modify `src/grammar/Command.g4` to update language patterns.
+* **Menu Items**:
+  Located in `src/database/models/menu.py`.
+* **Theme and Layout**:
+  Update GUI components in `src/interfaces/gui.py` and `MenuPopup` classes.
+
+---
+
+## 🧱 Architecture Overview
+
+```text
+src/
+├── core/             # Parser & Business Logic
+├── grammar/          # ANTLR grammar (.g4)
+├── generated/        # ANTLR-generated Python files
+├── interfaces/       # GUI (CustomTkinter) & CLI
+├── database/         # Models & Supabase client
+└── hooks/            # Session & authentication
 ```
 
-## Ghi Chú
-- Đảm bảo các thư mục đều có file `__init__.py`
-- ANTLR4 cần Java để chạy
-- Tạo parser với `-visitor` để sinh `CommandVisitor.py`
-- `cli.py` là giao diện chính hiện tại
-- Các thành phần khác như GUI, cấu hình, tài liệu chi tiết vẫn là chỗ đặt chỗ cho mở rộng
+> 🔄 Grammar → Parser → Processor → Database → Response
 
-## Environment:
-```bash
-SUPABASE_DB_URI=
-```
+---
+
+## 🧠 Prompt Engineering Principles Applied
+
+This project applies advanced prompt design embedded via ANTLR grammar, including:
+
+* **Clear Instructions**: Each command follows deterministic patterns with optional polite tokens (e.g., `please`, `thanks`).
+* **Contextual Flexibility**: Rules support free-form user expressions such as `"order 1 coffee"` or `"i want to add 10 dollars"`.
+* **Chain-of-Thought Parsing**: Commands are parsed into syntax trees and semantically interpreted by `CommandProcessor`.
+* **Default Fallbacks**: Missing account specs or invalid values are handled gracefully with friendly suggestions.
+* **Reference Text Integration**: Data is validated and persisted using relational models for user, order, and top-up operations.
+
+Refer to [Appendix 1](./PPL-Final-Report.pdf) of the report for full `Command.g4` grammar implementation.
+
+---
+
+## 🤝 Contributing
+
+1. Fork this repository
+2. Create your feature branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m "Add your feature"`
+4. Push to the branch: `git push origin feature/your-feature`
+5. Open a Pull Request
+
+Feel free to suggest improvements to grammar, features, or UI.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE).
+
+---
+
+## 🙌 Credits
+
+* Developed by:
+
+  * Trần Ngọc Đăng Khôi (Team Lead)
+  * Phạm Đình Anh Tuấn
+  * Nguyễn Hoàng Việt
+
+* Advisor: Ph.D. Lê Thị Ngọc Hạnh
+
+* Supported by: International University – Vietnam National University, HCMC
+
+**Tech Stack**:
+
+* 🐍 Python 3.12
+* 🧬 ANTLR4
+* 💾 PostgreSQL via Supabase
+* 🖼 CustomTkinter GUI
+* 🧠 NLP Grammar + Parsing
+
+---
+
+> “NetBot redefines the café experience—one order at a time.”
 
