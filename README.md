@@ -1,8 +1,4 @@
-Here is a professional, structured, and developer-friendly `README.md` for your GitHub project [PPL-Project](https://github.com/koitran14/PPL-Project), based on the codebase, your demo video, and content from the final report PDF:
 
----
-
-````markdown
 # 🧠 NetBot: Chatbot for Internet Café Order System
 
 A natural language-driven chatbot that automates food ordering and game account top-ups for internet cafés, designed for seamless integration in local desktop environments.
